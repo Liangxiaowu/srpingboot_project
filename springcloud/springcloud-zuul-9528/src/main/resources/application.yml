@@ -1,0 +1,25 @@
+server:
+  port: 9528
+spring:
+  application:
+    name: springcloud-zuul
+# Eureka 配置,
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7002.com:7002/eureka/
+  instance:
+    instance-id: zuul9528.com # 修改eureka上默认描述信息
+    prefer-ip-address: true
+
+info:
+  app.name: wudner
+  company.name: www.wudner.com
+
+zuul:
+  routes:
+    mydept.serviceId: springcloud-provider-dept # 原微服务名称
+    mydept.path: /mydept/**
+  ignored-services: springcloud-provider-dept #不能再使 用的路径
+  prefix: /wudner # 设置公共前缀
+

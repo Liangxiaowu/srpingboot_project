@@ -1,0 +1,29 @@
+server:
+  port: 8001
+mybatis:
+  type-aliases-package: package com.wudner.springcloud.pojo
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
+
+spring:
+  application:
+    name: springcloud-provider-dept
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: org.gjt.mm.mysql.Driver
+    url: jdbc:mysql://14.29.232.152:3306/blog?serverTimezone=UTC&characterEncoding=utf8&useUnicode=true&useSSL=false
+    username: blog
+    password: W4rQax8iJ6AFCpYD
+
+# Eureka 配置,
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7002.com:7002/eureka/
+  instance:
+    instance-id: springcloud-provider-dept8001 # 修改eureka上默认描述信息
+    prefer-ip-address: true
+#  server:
+#    enable-self-preservatio: false # 禁止自我保护
+info:
+  app.name: wudner

@@ -1,0 +1,18 @@
+server:
+  port: 8002
+
+spring:
+  application:
+    name: springcloud-provider-dept
+# Eureka 配置,
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka/,http://eureka7002.com:7002/eureka/
+  instance:
+    instance-id: springcloud-provider-dept8002 # 修改eureka上默认描述信息
+    prefer-ip-address: true
+#  server:
+#    enable-self-preservatio: false # 禁止自我保护
+info:
+  app.name: wudner
