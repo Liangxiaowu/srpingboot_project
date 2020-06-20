@@ -1,0 +1,59 @@
+server:
+  port: 9001
+
+spring:
+  application:
+    name: spring-cloud-gateway
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]': # 匹配所有请求
+            allowedOrigins: "*" # 允许所有域
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+      routes:
+        - id: 8001_route
+#          uri: http://localhost:8001 # 服务地址
+          uri: lb://cloud-payment-service #使用LoadBalancerClient 实现负载均衡
+          predicates:
+          - Path=/**
+#            - Host=wudner.provider.com** # 域名配置 该域名都会被指向http://localhost:8001地址
+#            - Path=/payment/** # 所有与payment都会被指向http://localhost:8001地址
+#          - Path=/api/payment/** # 所有与payment都会被指向http://localhost:8001地址
+          filters:
+          - StripPrefix=1  # 将请求路径中的第一个路劲去掉
+          ## 默认添加payment前缀
+#          - Path=/**
+#          filters:
+#            - PrefixPath=/payment
+
+          # 局部限流过滤器
+          - name: RequestRatelimiter
+            args:
+              key-resolver: "#{@ipKeyResolver}"
+              redis-rate-limiter.replenishRate: 1 # 每秒钟只允许有一个请求
+              redis-rate-limiter.burstCapacity: 4 # 允许并发有4个请求
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://eureka7001.com:7001/eureka,http://eureka7002.com:7002/eureka
+  instance:
+    prefer-ip-address: true # IP显示
+    instance-id: gateway9001 # 主机名称
+    lease-renewal-interval-in-seconds: 1 # eureka客户端向服务端发送心跳的时间间隔(默认30秒)
+    lease-expiration-duration-in-seconds: 2 # 服务端在收到最后心跳的等待时间上限(默认90秒)
+
+management:
+  endpoint:
+    gateway:
+      enabled: true
+    web:
+      exposure:
+        include: true
